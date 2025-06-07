@@ -1,0 +1,24 @@
+import { ArticleLayout } from '@/components/ArticleLayout'
+import Image from 'next/image'
+
+export const meta = {
+  author: 'Manish Kumar',
+  date: '2023-12-25',
+  title: ' Factory Design',
+  description:
+    'A creational design pattern that provides an Interface for creating objects in a superclass, but allows subclasses to alter the type of objects that will be created.'
+}
+
+
+export default (props) => <ArticleLayout meta={meta} {...props} />
+
+Factory Pattern is one of the Creational Design pattern. This pattern takes out the responsibility of instantiating a class from the client program to the factory class. Let’s first learn how to implement a factory design pattern in java and then we will look into factory pattern advantages.
+
+A creational design pattern that provides an Interface for creating objects in a superclass, but allows subclasses to alter the type of objects that will be created.
+
+Implementation:
+
+Define a factory method inside an interface.
+Let the subclass implements the above factory method and decides which object to create.
+In Java, constructors are not polymorphic, but by allowing subclass to create an object, we are adding polymorphic behavior to the instantiation. In short, we are trying to achieve Pseudo polymorphism by letting the subclass to decide what to create, and so this Factory method is also called a virtual constructor.
+
