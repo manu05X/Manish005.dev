@@ -192,7 +192,7 @@ export default function Home({ articles }) {
               Nice to meet you.
             </h1>
             <p className="mt-6 text-base text-zinc-600 dark:text-zinc-400">
-              I'm Manish, a Software Developer Engineer II at Nike, where I'm currently modernizing Nike's legacy event platform by developing a secure, vendor-agnostic middleware layer. My work includes engineering JWT-based authentication to ensure token isolation between Nike and Eventtia systems, enabling seamless event registration for millions of users through resilient, low-latency APIs.
+              I&apos;m Manish, a Software Developer Engineer II at Nike, where I&apos;m currently modernizing Nike&apos;s legacy event platform by developing a secure, vendor-agnostic middleware layer. My work includes engineering JWT-based authentication to ensure token isolation between Nike and Eventtia systems, enabling seamless event registration for millions of users through resilient, low-latency APIs.
             </p>
             <p className="mt-4 text-base text-zinc-600 dark:text-zinc-400">
               Previously, I worked at Samsung India as a Senior Software Engineer, where I completed my bachelor of engineering from Jadavpur University(Kolkata) in Information Technology. Working on the web is my passion as I love to work on exciting projects. This is the field I get to express my creativity.

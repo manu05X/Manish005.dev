@@ -1,10 +1,10 @@
 // components/SkillCategory.js
 
 const SkillCategory = ({ title, skills, children }) => {
-  return (
-    <div className="mb-8">
-      {/* <h3 className="text-x4 font-normal mb-4 text-teal-500">{title}</h3> */}
-      <h3 className="text-x4 font-normal mb-4 text-zinc-800 dark:text-zinc-100">{title}</h3>
+    return (
+      <div className="mb-8">
+        {/* <h3 className="text-x4 font-normal mb-4 text-teal-500">{title}</h3> */}
+        <h3 className="text-x4 font-normal mb-4 text-zinc-800 dark:text-zinc-100">{title}</h3>
       {skills ? (
         <div className="flex flex-wrap gap-2">
           {skills.map((skill, index) => (
@@ -19,9 +19,9 @@ const SkillCategory = ({ title, skills, children }) => {
       ) : (
         children
       )}
-    </div>
-  );
-};
-
-export default SkillCategory;
+      </div>
+    );
+  };
+  
+  export default SkillCategory;
   

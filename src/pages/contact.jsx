@@ -136,7 +136,7 @@ function ContactForm() {
           animate={{ opacity: 1 }}
           className="sm:col-span-2 text-sm text-emerald-600 dark:text-emerald-400"
         >
-          Thank you for your message! I'll get back to you soon.
+          Thank you for your message! I&apos;ll get back to you soon.
         </motion.p>
       )}
       {status === 'error' && (
@@ -163,8 +163,8 @@ export default function Contact() {
         />
       </Head>
       <SimpleLayout
-        title="Let's work together"
-        intro="I'm always open to discussing new projects, creative ideas or opportunities to be part of your visions."
+        title="Let&apos;s work together"
+        intro="I&apos;m always open to discussing new projects, creative ideas or opportunities to be part of your visions."
       >
         <ContactForm />
       </SimpleLayout>
