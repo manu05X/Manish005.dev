@@ -23,13 +23,9 @@ export function Footer() {
               <div className="flex flex-wrap justify-center gap-x-6 gap-y-1 text-sm font-medium text-zinc-800 dark:text-zinc-200">
                 <NavLink href="/about">About</NavLink>
                 <NavLink href="/projects">Projects</NavLink>
-<<<<<<< HEAD
-                <NavLink href="/articles">Articles</NavLink>
-=======
                 <NavLink href="/photography">Photography</NavLink>
                 <NavLink href="/blogs">Blogs</NavLink>
                 <NavLink href="/contact">Contact</NavLink>
->>>>>>> 4d4ba25 (Initial commit: Portfolio website)
               </div>
               <p className="text-sm text-zinc-400 dark:text-zinc-500">
                 &copy; {new Date().getFullYear()} Manish Kumar. All rights

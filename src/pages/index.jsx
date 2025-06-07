@@ -1,10 +1,7 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import clsx from 'clsx'
-<<<<<<< HEAD
-=======
 import { motion } from 'framer-motion'
->>>>>>> 4d4ba25 (Initial commit: Portfolio website)
 
 import { Container } from '@/components/Container'
 import { Button } from '@/components/Button'
@@ -13,11 +10,8 @@ import { getAllArticles } from '@/lib/getAllArticles'
 import { formatDate } from '@/lib/formatDate'
 import { saveAs } from 'file-saver';
 import React, { useEffect, useRef, useState } from 'react';
-<<<<<<< HEAD
-=======
 import { ToolsSection } from '@/components/home/ToolsSection'
 import { Photos } from '@/components/home/Photos'
->>>>>>> 4d4ba25 (Initial commit: Portfolio website)
 
 import {
     MediumIcon,
@@ -33,10 +27,7 @@ import {
 
 import logoFalco from '@/images/projects/falco.svg'
 import logoSamsung from '@/images/logos/samsung.gif'
-<<<<<<< HEAD
-=======
 import logoNike from '@/images/nikelogo.jpg'
->>>>>>> 4d4ba25 (Initial commit: Portfolio website)
 import logoJU from '@/images/logos/Ju_logo.png'
 import road from '@/images/Road.jpg'
 import GirlBoy from '@/images/GirlBoy.jpg'
@@ -46,20 +37,6 @@ import samsung from '@/images/Entrance.jpg'
 import { SkillSection } from '@/components/SkillSection'
 import SkillCategory from '@/components/SkillCategory'
 
-<<<<<<< HEAD
-
-function ToolsSection({children, ...props }) {
-  return (
-    <SkillSection {...props}>
-      <ul role="list" className="space-y-16">
-        {children}
-      </ul>
-    </SkillSection>
-  )
-}
-
-=======
->>>>>>> 4d4ba25 (Initial commit: Portfolio website)
 // Main Page article section
 function Article({ article }) {
   return (
@@ -86,24 +63,15 @@ function Resume() {
   
     let resume = [
       {
-<<<<<<< HEAD
-        company: 'Samsung India  -  Banglore',
-        title: 'Senior Software Engineer',
-        logo: logoSamsung,
-        start: 'July 2021',
-=======
         company: 'Nike - Bangalore',
         title: 'Software Developer Engineer II',
         logo: logoNike,
         start: 'Jan 2025',
->>>>>>> 4d4ba25 (Initial commit: Portfolio website)
         end: {
           label: 'Present',
           dateTime: new Date().getFullYear(),
         },
       },
-<<<<<<< HEAD
-=======
 
       {
         company: 'Samsung India - Bangalore',
@@ -121,7 +89,6 @@ function Resume() {
           }
         ]
       },
->>>>>>> 4d4ba25 (Initial commit: Portfolio website)
       {
         company: 'Zen Construction  -  Banglore',
         title: 'Web Developer',
@@ -158,26 +125,6 @@ function Resume() {
                 <dd className="w-full flex-none text-sm font-medium text-zinc-900 dark:text-zinc-100">
                   {role.company}
                 </dd>
-<<<<<<< HEAD
-                <dt className="sr-only">Role</dt>
-                <dd className="text-xs text-zinc-500 dark:text-zinc-400">
-                  {role.title}
-                </dd>
-                <dt className="sr-only">Date</dt>
-                <dd
-                  className="ml-auto text-xs text-zinc-400 dark:text-zinc-500"
-                  aria-label={`${role.start.label ?? role.start} until ${role.end.label ?? role.end
-                    }`}
-                >
-                  <time dateTime={role.start.dateTime ?? role.start}>
-                    {role.start.label ?? role.start}
-                  </time>{' '}
-                  <span aria-hidden="true">—</span>{' '}
-                  <time dateTime={role.end.dateTime ?? role.end}>
-                    {role.end.label ?? role.end}
-                  </time>
-                </dd>
-=======
                 {role.roles ? (
                   role.roles.map((subRole, index) => (
                     <div key={index} className="mt-1 flex justify-between items-center w-full">
@@ -213,7 +160,6 @@ function Resume() {
                     </dd>
                   </div>
                 )}
->>>>>>> 4d4ba25 (Initial commit: Portfolio website)
               </dl>
             </li>
           ))}
@@ -226,108 +172,8 @@ function Resume() {
     )
   }
 
-<<<<<<< HEAD
-//Photos section of main page
-
-  function Photos() {
-    let rotations = ['rotate-3', '-rotate-3', 'rotate-3', '-rotate-3', 'rotate-3']
-  
-    return (
-      <div className="mt-16 sm:mt-20">
-        <div className="-my-4 flex justify-center gap-5 overflow-hidden py-4 sm:gap-8">
-          {[samsung, GirlBoy, temple, road, groot].map((image, imageIndex) => (
-            <div
-              key={image.src}
-              className={clsx(
-                'relative aspect-[9/10] w-44 flex-none overflow-hidden rounded-xl bg-zinc-100 dark:bg-zinc-800 sm:w-72 sm:rounded-2xl',
-                rotations[imageIndex % rotations.length],
-                'transition-transform transform hover:scale-110 hover:rotate-0',
-                'sm:hover:scale-110',
-                'mobile-move'
-              )}
-            >
-              <Image
-                src={image}
-                alt=""
-                sizes="(min-width: 640px) 18rem, 11rem"
-                className="absolute inset-0 h-full w-full object-cover"
-              />
-            </div>
-          ))}
-        </div>
-      </div>
-    )
-  }
-
-
-/*
-function Photos() {
-  const rotations = ['rotate-3', '-rotate-3', 'rotate-3', '-rotate-3', 'rotate-3'];
-  const [startX, setStartX] = useState(0);
-  const [scrollLeft, setScrollLeft] = useState(0);
-  const containerRef = useRef(null);
-
-  const handleTouchStart = (e) => {
-    setStartX(e.touches[0].pageX - containerRef.current.offsetLeft);
-  };
-
-  const handleTouchMove = (e) => {
-    const x = e.touches[0].pageX - containerRef.current.offsetLeft;
-    const walk = (x - startX) * 1; // Adjust the multiplier for sensitivity
-    setScrollLeft(scrollLeft - walk);
-    containerRef.current.scrollLeft = scrollLeft;
-
-    // Infinite scroll logic
-    const containerWidth = containerRef.current.offsetWidth;
-    if (scrollLeft <= 0) {
-      setScrollLeft(scrollLeft + containerWidth);
-    } else if (scrollLeft >= containerWidth * 2) {
-      setScrollLeft(scrollLeft - containerWidth);
-    }
-  };
-
-  return (
-    <div
-      className="mt-16 sm:mt-20 overflow-x-scroll"
-      ref={containerRef}
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-    >
-      <div className="-my-4 flex justify-center gap-5 py-4 sm:gap-8">
-        {[samsung, GirlBoy, temple, road, groot].map((image, imageIndex) => (
-          <div
-            key={image.src + imageIndex}
-            className={clsx(
-              'relative aspect-[9/10] w-44 flex-none overflow-hidden rounded-xl bg-zinc-100 dark:bg-zinc-800 sm:w-72 sm:rounded-2xl',
-              rotations[imageIndex % rotations.length],
-              'transition-transform transform hover:scale-110 hover:rotate-0',
-              'sm:hover:scale-110',
-              'mobile-move'
-            )}
-          >
-            <Image
-              src={image}
-              alt=""
-              sizes="(min-width: 640px) 18rem, 11rem"
-              className="absolute inset-0 h-full w-full object-cover"
-            />
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-*/
-
-
-  // This is the home section 
-export default function Home({ articles }) {
-  // console.log(articles)
-
-=======
 // This is the home section 
 export default function Home({ articles }) {
->>>>>>> 4d4ba25 (Initial commit: Portfolio website)
   return (
     <>
       <Head>
@@ -336,34 +182,16 @@ export default function Home({ articles }) {
         </title>
         <meta
           name="description"
-<<<<<<< HEAD
-          content="I am Manish, a Senior Software Enginner currently at Samsung. I sometimes occasionally build the odd open-source project."
-        />
-      </Head>
-      <Container className="mt-9">
-        <div className="grid md:grid-cols-2 gap-4">
-=======
           content="I'm Manish, a Senior Software Engineer currently at Samsung(SSIR). I completed my bachelor of engineering from Jadavpur University(Kolkata) in Information Technology."
         />
       </Head>
       <Container className="mt-9">
         <div className="grid md:grid-cols-1 gap-4">
->>>>>>> 4d4ba25 (Initial commit: Portfolio website)
           <div className="col-span-1">
             <h1 className="text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl">
               Nice to meet you.
             </h1>
             <p className="mt-6 text-base text-zinc-600 dark:text-zinc-400">
-<<<<<<< HEAD
-              I’m Manish, a Senior Software Engineer currently at Samsung(SSIR). I completed my bachelor of engineering from Jadavpur University(Kolkata) in Information Technology. 
-              Working on the web is my passion as I love to work on exciting projects. This is the field I get to express my creativity.
-            </p>
-          </div>
-          <div className="md:ml-auto max-w-xs col-span-1 flex flex-col items-end"> {/* Updated to flex and items-end */}
-            <Resume />
-          </div>
-          <div className="mt-4 flex gap-6">
-=======
               I'm Manish, a Software Developer Engineer II at Nike, where I'm currently modernizing Nike's legacy event platform by developing a secure, vendor-agnostic middleware layer. My work includes engineering JWT-based authentication to ensure token isolation between Nike and Eventtia systems, enabling seamless event registration for millions of users through resilient, low-latency APIs.
             </p>
             <p className="mt-4 text-base text-zinc-600 dark:text-zinc-400">
@@ -372,7 +200,6 @@ export default function Home({ articles }) {
           </div>
         </div>
         <div className="mt-4 flex gap-6">
->>>>>>> 4d4ba25 (Initial commit: Portfolio website)
             <SocialLink
               href="https://twitter.com/LostBagpacker05"
               aria-label="Follow on Twitter"
@@ -400,25 +227,6 @@ export default function Home({ articles }) {
               icon={MediumIcon}
             /> 
           </div>
-<<<<<<< HEAD
-        </div>
-      </Container>
-      <Photos />
-      <Container className="mt-24 md:mt-28">
-        <div className="mx-auto grid max-w-xl grid-cols-1 gap-y-20 lg:max-w-none lg:grid-cols-2">
-          <div className="flex flex-col gap-16">
-            {articles.map((article,index) => (
-              <Article key={index} article={article} />
-            ))}
-          </div>
-          <div className="space-y-10 lg:pl-16 xl:pl-24">
-              <ToolsSection title='Skills'>
-                <SkillCategory title="Programing Languages" skills={['Java', 'JavaScript', 'C++', 'Python', 'C#']}/>
-                <SkillCategory title="Web Development" skills={['React.Js', 'Next.Js','Astro','Node.Js', 'Mongo DB', 'MVC', 'REST','HTML5','ES6']}/>
-                <SkillCategory title="Software & Applications" skills={['Github', 'Figma', 'Jira', 'Canva','PowerPoint', 'Gradle', 'Mokito','Chat-Gpt', 'Bard']}/>
-                <SkillCategory title="Tools" skills={['VSCode', 'IntelliJ', 'Linux', 'Windows 11','Chrome','Sublime Text', 'MS-Edge','MS-VisualStudio']}/>
-              </ToolsSection>
-=======
       </Container>
 
       <Photos />
@@ -473,7 +281,6 @@ export default function Home({ articles }) {
                 ]} 
               />
             </ToolsSection>
->>>>>>> 4d4ba25 (Initial commit: Portfolio website)
           </div>
         </div>
       </Container>
@@ -481,24 +288,10 @@ export default function Home({ articles }) {
   )
 }
 
-<<<<<<< HEAD
-
-export async function getStaticProps() {
-  // if (process.env.NODE_ENV === 'production') {
-  //   await generateRssFeed()
-  // }
-
-  return {
-    props: {
-      articles: (await getAllArticles())
-        .slice(0, 4)
-        .map(({ component, ...meta }) => meta),
-=======
 export async function getStaticProps() {
   return {
     props: {
       articles: (await getAllArticles()).map(({ component, ...meta }) => meta),
->>>>>>> 4d4ba25 (Initial commit: Portfolio website)
     },
   }
 }

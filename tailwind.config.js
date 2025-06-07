@@ -1,14 +1,10 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-<<<<<<< HEAD
-  content: ['./src/**/*.{js,jsx}'],
-=======
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
->>>>>>> 4d4ba25 (Initial commit: Portfolio website)
   darkMode: 'class',
   plugins: [require('@tailwindcss/typography')],
   theme: {
@@ -307,8 +303,6 @@ module.exports = {
         },
       },
     }),
-<<<<<<< HEAD
-=======
     extend: {
       animation: {
         shine: 'shine 2s linear infinite',
@@ -320,6 +314,5 @@ module.exports = {
         },
       },
     },
->>>>>>> 4d4ba25 (Initial commit: Portfolio website)
   },
 }
