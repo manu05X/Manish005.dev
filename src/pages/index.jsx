@@ -201,7 +201,7 @@ export default function Home({ articles }) {
         </div>
         <div className="mt-4 flex gap-6">
             <SocialLink
-              href="https://twitter.com/LostBagpacker05"
+              href="https://twitter.com/"
               aria-label="Follow on Twitter"
               icon={TwitterIcon}
             />
@@ -217,7 +217,7 @@ export default function Home({ articles }) {
               icon={LinkedInIcon}
             />
             <SocialLink
-              href="https://www.instagram.com/backpacker_lost/"
+              href="https://www.instagram.com/_manu__005/"
               aria-label="Follow on Instagram"
               icon={InstagramIcon}
             />
