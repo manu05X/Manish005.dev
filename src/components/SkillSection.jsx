@@ -6,17 +6,18 @@ export function SkillSection({ title, children }) {
   return (
     <section
       aria-labelledby={id}
-      className="md:border-l md:border-zinc-100 md:pl-6 md:dark:border-zinc-700/100"
+      className="rounded-2xl border border-zinc-100 p-6 dark:border-zinc-700/40"
     >
-      <div className="grid max-w-3xl grid-cols-1 items-baseline gap-y-8 md:grid-cols-4">
-        <h2
-          id={id}
-          className="text-xl font-bold text-zinc-800 dark:text-zinc-100"
-        >
-          {title}
-        </h2>
-        <div className="md:col-span-3">{children}</div>
-      </div>
+      <h2
+        id={id}
+        className="flex text-sm font-semibold text-zinc-900 dark:text-zinc-100"
+      >
+        <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="h-6 w-6 flex-none stroke-zinc-500">
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+        </svg>
+        <span className="ml-3">{title}</span>
+      </h2>
+      <div className="mt-6">{children}</div>
     </section>
   )
 }

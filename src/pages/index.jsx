@@ -1,17 +1,25 @@
 import Head from 'next/head'
 import Image from 'next/image'
+import Link from 'next/link'
 import clsx from 'clsx'
 import { motion } from 'framer-motion'
 
 import { Container } from '@/components/Container'
 import { Button } from '@/components/Button'
-import { Card } from '@/components/Card'
-import { getAllArticles } from '@/lib/getAllArticles'
-import { formatDate } from '@/lib/formatDate'
-import { saveAs } from 'file-saver';
 import React, { useEffect, useRef, useState } from 'react';
+import dynamic from 'next/dynamic'
 import { ToolsSection } from '@/components/home/ToolsSection'
 import { Photos } from '@/components/home/Photos'
+import { formatDate } from '@/lib/formatDate'
+import SkillCategory from '@/components/SkillCategory'
+
+const GitHubCalendar = dynamic(() => import('react-github-calendar'), {
+  ssr: false,
+})
+
+const Globe = dynamic(() => import('@/components/Globe'), {
+  ssr: false,
+})
 
 import {
     MediumIcon,
@@ -22,43 +30,16 @@ import {
     BriefcaseIcon,
     SocialLink,
     ArrowDownIcon,
-    MailIcon,
   } from '@/components/SocialIcons'
 
 import logoFalco from '@/images/projects/falco.svg'
 import logoSamsung from '@/images/logos/samsung.gif'
 import logoNike from '@/images/nikelogo.jpg'
 import logoJU from '@/images/logos/Ju_logo.png'
-import road from '@/images/Road.jpg'
-import GirlBoy from '@/images/GirlBoy.jpg'
-import groot from '@/images/photos/Groot.jpg'
-import temple from '@/images/Temple.jpg'
-import samsung from '@/images/Entrance.jpg'
-import { SkillSection } from '@/components/SkillSection'
-import SkillCategory from '@/components/SkillCategory'
 
-// Main Page article section
-function Article({ article }) {
-  return (
-    <Card as="article">
-      <Card.Title href={`/articles/${article.slug}`}>
-        {article.title}
-      </Card.Title>
-      <Card.Eyebrow as="time" dateTime={article.date} decorate>
-        {formatDate(article.date)}
-      </Card.Eyebrow>
-      <Card.Description>{article.description}</Card.Description>
-      <Card.Cta>Read article</Card.Cta>
-    </Card>
-  )
-}
-
-//Resume Section
 function Resume() {
     const handleDownloadCV = () => {
-      const pdfPath = '/resources/ManishCV.pdf';
-      saveAs(pdfPath, 'ManishResume.pdf');
-      window.open(pdfPath, '_blank');
+      window.open('/api/resume-pdf', '_blank')
     };
   
     let resume = [
@@ -72,7 +53,6 @@ function Resume() {
           dateTime: new Date().getFullYear(),
         },
       },
-
       {
         company: 'Samsung India - Bangalore',
         logo: logoSamsung,
@@ -90,7 +70,7 @@ function Resume() {
         ]
       },
       {
-        company: 'Zen Construction  -  Banglore',
+        company: 'Zen Construction  -  Bangalore',
         title: 'Web Developer',
         logo: logoFalco,
         start: 'Nov 2023',
@@ -117,8 +97,8 @@ function Resume() {
         <ol className="mt-6 space-y-4">
           {resume.map((role, roleIndex) => (
             <li key={roleIndex} className="flex gap-4">
-              <div className="relative mt-1 flex h-10 w-10 flex-none items-center justify-center rounded-full shadow-md shadow-zinc-800/5 ring-1 ring-zinc-900/5 dark:border dark:border-zinc-700/50 dark:bg-zinc-800 dark:ring-0">
-                <Image src={role.logo} alt="" className="h-7 w-7" unoptimized />
+              <div className="relative mt-1 flex h-10 w-10 flex-none items-center justify-center overflow-hidden rounded-full bg-white shadow-md shadow-zinc-800/5 ring-1 ring-zinc-900/5 dark:border dark:border-zinc-700/50 dark:bg-zinc-800 dark:ring-0">
+                <Image src={role.logo} alt="" className="h-full w-full object-cover" unoptimized />
               </div>
               <dl className="flex flex-auto flex-wrap gap-x-2">
                 <dt className="sr-only">Company</dt>
@@ -164,16 +144,143 @@ function Resume() {
             </li>
           ))}
         </ol>
-        <Button onClick={handleDownloadCV} variant="secondary" className="group mt-6 w-full">
-          Download CV
-          <ArrowDownIcon className="h-4 w-4 stroke-zinc-400 transition group-active:stroke-zinc-600 dark:group-hover:stroke-zinc-50 dark:group-active:stroke-zinc-50" />
-        </Button>
+        <div className="mt-6 flex gap-3">
+          <MagneticButton className="flex-1">
+            <Button onClick={handleDownloadCV} variant="secondary" className="group w-full">
+              Download CV
+              <ArrowDownIcon className="h-4 w-4 stroke-zinc-400 transition group-active:stroke-zinc-600 dark:group-hover:stroke-zinc-50 dark:group-active:stroke-zinc-50" />
+            </Button>
+          </MagneticButton>
+          <MagneticButton className="flex-1">
+            <Link
+              href="/resume"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-zinc-50 px-3 py-2 text-sm font-medium text-zinc-900 outline-offset-2 transition hover:bg-zinc-100 active:bg-zinc-100 active:text-zinc-900/60 dark:bg-zinc-800/50 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-zinc-50 dark:active:bg-zinc-800/50 dark:active:text-zinc-50/70"
+            >
+              View Full Resume
+            </Link>
+          </MagneticButton>
+        </div>
       </div>
     )
   }
 
-// This is the home section 
+const sectionVariants = {
+  hidden: { opacity: 0, y: 40 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: 'easeOut' },
+  },
+}
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.15, delayChildren: 0.1 },
+  },
+}
+
+const staggerItem = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: 'easeOut' } },
+}
+
+function MagneticButton({ children, className, ...props }) {
+  const ref = useRef(null)
+
+  function handleMouseMove(e) {
+    const btn = ref.current
+    if (!btn) return
+    const rect = btn.getBoundingClientRect()
+    const x = e.clientX - rect.left - rect.width / 2
+    const y = e.clientY - rect.top - rect.height / 2
+    btn.style.transform = `translate(${x * 0.15}px, ${y * 0.15}px)`
+  }
+
+  function handleMouseLeave() {
+    if (ref.current) ref.current.style.transform = 'translate(0, 0)'
+  }
+
+  return (
+    <div
+      ref={ref}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className={clsx('inline-block transition-transform duration-200', className)}
+      {...props}
+    >
+      {children}
+    </div>
+  )
+}
+
+function useIsDark() {
+  const [isDark, setIsDark] = useState(false)
+  useEffect(() => {
+    const root = document.documentElement
+    const update = () => setIsDark(root.classList.contains('dark'))
+    update()
+    const observer = new MutationObserver(update)
+    observer.observe(root, { attributes: true, attributeFilter: ['class'] })
+    return () => observer.disconnect()
+  }, [])
+  return isDark
+}
+
+function ArticleCard({ article }) {
+  const isMedium = article.source === 'medium'
+  const href = isMedium ? article.link : `/articles/${article.slug}`
+  const linkProps = isMedium
+    ? { target: '_blank', rel: 'noopener noreferrer' }
+    : {}
+
+  return (
+    <a
+      href={href}
+      {...linkProps}
+      className="group flex flex-col overflow-hidden rounded-2xl border border-zinc-100 bg-white transition-all duration-300 hover:border-zinc-200 hover:shadow-lg hover:shadow-zinc-200/50 dark:border-zinc-700/50 dark:bg-zinc-800/50 dark:hover:border-zinc-600 dark:hover:shadow-zinc-900/50"
+    >
+      {article.thumbnail && (
+        <div className="relative aspect-[2/1] w-full overflow-hidden bg-zinc-100 dark:bg-zinc-800">
+          <img
+            src={article.thumbnail}
+            alt=""
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+        </div>
+      )}
+      <div className="flex flex-1 flex-col p-5">
+        <div className="flex items-center gap-2 text-xs text-zinc-500 dark:text-zinc-400">
+          <time dateTime={article.date}>{formatDate(article.date)}</time>
+          {isMedium && (
+            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 font-medium text-emerald-600 dark:text-emerald-400">
+              <svg viewBox="0 0 24 24" className="h-3 w-3 fill-current" aria-hidden="true">
+                <path d="M13.54 12a6.8 6.8 0 01-6.77 6.82A6.8 6.8 0 010 12a6.8 6.8 0 016.77-6.82A6.8 6.8 0 0113.54 12zm7.42 0c0 3.54-1.51 6.42-3.38 6.42-1.87 0-3.39-2.88-3.39-6.42s1.52-6.42 3.39-6.42 3.38 2.88 3.38 6.42M24 12c0 3.17-.53 5.75-1.19 5.75-.66 0-1.19-2.58-1.19-5.75s.53-5.75 1.19-5.75C23.47 6.25 24 8.83 24 12z" />
+              </svg>
+              Medium
+            </span>
+          )}
+        </div>
+        <h3 className="mt-2 text-sm font-semibold leading-snug text-zinc-900 transition-colors group-hover:text-teal-500 dark:text-zinc-100 dark:group-hover:text-teal-400 sm:text-base">
+          {article.title}
+        </h3>
+        <p className="mt-1.5 line-clamp-2 flex-1 text-xs leading-relaxed text-zinc-600 dark:text-zinc-400 sm:text-sm">
+          {article.description}
+        </p>
+        <span className="mt-3 flex items-center gap-1 text-sm font-medium text-teal-500">
+          {isMedium ? 'Read on Medium' : 'Read article'}
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" className="h-4 w-4 stroke-current transition-transform duration-200 group-hover:translate-x-0.5">
+            <path d="M6.75 5.75 9.25 8l-2.5 2.25" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </span>
+      </div>
+    </a>
+  )
+}
+
 export default function Home({ articles }) {
+  const isDark = useIsDark()
   return (
     <>
       <Head>
@@ -182,116 +289,170 @@ export default function Home({ articles }) {
         </title>
         <meta
           name="description"
-          content="I'm Manish, a Senior Software Engineer currently at Samsung(SSIR). I completed my bachelor of engineering from Jadavpur University(Kolkata) in Information Technology."
+          content="I'm Manish, a Software Developer Engineer II at Nike. I build resilient, high-scale web platforms and love turning complex problems into elegant solutions."
         />
       </Head>
-      <Container className="mt-9">
-        <div className="grid md:grid-cols-1 gap-4">
-          <div className="col-span-1">
-            <h1 className="text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl">
-              Nice to meet you.
-            </h1>
-            <p className="mt-6 text-base text-zinc-600 dark:text-zinc-400">
-              I&apos;m Manish, a Software Developer Engineer II at Nike, where I&apos;m currently modernizing Nike&apos;s legacy event platform by developing a secure, vendor-agnostic middleware layer. My work includes engineering JWT-based authentication to ensure token isolation between Nike and Eventtia systems, enabling seamless event registration for millions of users through resilient, low-latency APIs.
-            </p>
-            <p className="mt-4 text-base text-zinc-600 dark:text-zinc-400">
-              Previously, I worked at Samsung India as a Senior Software Engineer, where I completed my bachelor of engineering from Jadavpur University(Kolkata) in Information Technology. Working on the web is my passion as I love to work on exciting projects. This is the field I get to express my creativity.
-            </p>
+      <div className="relative">
+        <div className="hero-mesh" />
+        <Container className="relative z-10 mt-9">
+          <div className="grid grid-cols-1 items-center lg:grid-cols-2 lg:gap-x-8">
+            <motion.div
+              className="max-w-2xl"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <h1 className="text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl">
+                Hey, I&apos;m Manish.
+              </h1>
+              <p className="mt-3 text-xl font-semibold sm:text-2xl">
+                <span className="shimmer-text">SDE II at Nike</span>
+              </p>
+              <p className="mt-6 max-w-xl text-base leading-7 text-zinc-600 dark:text-zinc-400">
+                I build resilient, high-scale web platforms and love turning
+                complex problems into elegant solutions. Passionate about system
+                design, open source, and crafting delightful user experiences.
+              </p>
+              <div className="mt-8 flex gap-6">
+                <SocialLink
+                  href="https://twitter.com/"
+                  aria-label="Follow on Twitter"
+                  icon={TwitterIcon}
+                />
+                <SocialLink
+                  href="https://github.com/manu05X"
+                  aria-label="Follow on GitHub"
+                  icon={GitHubIcon}
+                />
+                <SocialLink
+                  href="https://www.linkedin.com/in/manishkumar005/"
+                  aria-label="Follow on LinkedIn"
+                  icon={LinkedInIcon}
+                />
+                <SocialLink
+                  href="https://www.instagram.com/_manu__005/"
+                  aria-label="Follow on Instagram"
+                  icon={InstagramIcon}
+                />
+                <SocialLink
+                  href="https://medium.com/@k.manu00005"
+                  aria-label="Follow on Medium"
+                  icon={MediumIcon}
+                />
+              </div>
+            </motion.div>
+            <motion.div
+              className="hidden items-center justify-center lg:flex"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <Globe isDark={isDark} size={420} />
+            </motion.div>
           </div>
-        </div>
-        <div className="mt-4 flex gap-6">
-            <SocialLink
-              href="https://twitter.com/"
-              aria-label="Follow on Twitter"
-              icon={TwitterIcon}
-            />
-            <SocialLink
-              href="https://github.com/manu05X"
-              aria-label="Follow on GitHub"
-              icon={GitHubIcon}
-            />
-            
-            <SocialLink
-              href="https://www.linkedin.com/in/manishkumar005/"
-              aria-label="Follow on LinkedIn"
-              icon={LinkedInIcon}
-            />
-            <SocialLink
-              href="https://www.instagram.com/_manu__005/"
-              aria-label="Follow on Instagram"
-              icon={InstagramIcon}
-            />
-            <SocialLink
-              href="https://medium.com/@k.manu00005"
-              aria-label="Follow on Twitter"
-              icon={MediumIcon}
-            /> 
-          </div>
-      </Container>
+        </Container>
+      </div>
 
-      <Photos />
       <Container className="mt-24 md:mt-28">
-        <div className="mx-auto grid max-w-xl grid-cols-1 gap-y-20 lg:max-w-none lg:grid-cols-2">
-          <div className="md:ml-auto max-w-lg col-span-1 flex flex-col">
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-80px' }}
+          className="grid grid-cols-1 gap-8 lg:grid-cols-3"
+        >
+          <motion.div variants={staggerItem} className="lg:col-span-1">
             <Resume />
-          </div>
-          <div className="space-y-10 lg:pl-16 xl:pl-24">
+          </motion.div>
+          <motion.div variants={staggerItem} className="lg:col-span-2">
             <ToolsSection title="Skills">
               <SkillCategory 
                 title="Programming Languages" 
-                skills={[
-                  'Java', 
-                  'JavaScript', 
-                  'TypeScript',
-                  'Python', 
-                  'C++', 
-                  'Golang'
-                ]} 
+                skills={['Java', 'JavaScript', 'TypeScript', 'Python', 'C++', 'Golang']} 
               />
               <SkillCategory 
                 title="Web Technologies" 
-                skills={[
-                  'Spring Boot',
-                  'React.js',
-                  'Next.js',
-                  'Node.js',
-                  'Express.js',
-                  'REST APIs',
-                  'GraphQL',
-                  'MongoDB',
-                  'MySQL',
-                  'PostgreSQL',
-                  'Redis',
-                  'AWS',
-                  'Docker',
-                  'Kubernetes'
-                ]} 
+                skills={['Spring Boot', 'React.js', 'Next.js', 'Node.js', 'Express.js', 'REST APIs', 'GraphQL', 'MongoDB', 'MySQL', 'PostgreSQL', 'Redis', 'AWS', 'Docker', 'Kubernetes']} 
               />
-             
               <SkillCategory 
                 title="Tools & Practices" 
-                skills={[
-                  'Git & GitHub',
-                  'GitHub Copilot',
-                  'Jira',
-                  'Agile/Scrum',
-                  'CI/CD',
-                  'Microservices',
-                  'System Design'
-                ]} 
+                skills={['Git & GitHub', 'GitHub Copilot', 'Jira', 'Agile/Scrum', 'CI/CD', 'Microservices', 'System Design']} 
               />
             </ToolsSection>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </Container>
+
+      <Container className="mt-24 md:mt-28">
+        <motion.div
+          variants={sectionVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-80px' }}
+          className="rounded-2xl border border-zinc-100 p-6 dark:border-zinc-700/40"
+        >
+          <h2 className="flex text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+            <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="h-6 w-6 flex-none stroke-zinc-500">
+              <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+            </svg>
+            <span className="ml-3">GitHub Contributions</span>
+          </h2>
+          <div className="mt-6 overflow-x-auto">
+            <GitHubCalendar
+              username="manu05X"
+              colorScheme={isDark ? 'dark' : 'light'}
+              blockSize={13}
+              blockMargin={4}
+              fontSize={14}
+            />
+          </div>
+        </motion.div>
+      </Container>
+
+      {articles && articles.length > 0 && (
+        <Container className="mt-24 md:mt-28">
+          <motion.div
+            variants={sectionVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-80px' }}
+          >
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-3xl">
+                Latest Articles
+              </h2>
+              <Link
+                href="/articles"
+                className="text-sm font-medium text-teal-500 transition hover:text-teal-600"
+              >
+                View all &rarr;
+              </Link>
+            </div>
+            <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              {articles.map((article) => (
+                <ArticleCard key={article.slug} article={article} />
+              ))}
+            </div>
+          </motion.div>
+        </Container>
+      )}
+
+      <Photos />
     </>
   )
 }
 
 export async function getStaticProps() {
+  const { getMediumArticles } = await import('@/lib/medium')
+
+  const mediumArticles = await getMediumArticles()
+
+  const articles = mediumArticles
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
+    .slice(0, 4)
+
   return {
-    props: {
-      articles: (await getAllArticles()).map(({ component, ...meta }) => meta),
-    },
+    props: { articles },
+    revalidate: 3600,
   }
 }

@@ -1,204 +1,187 @@
 import Head from 'next/head'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { Container } from '@/components/Container'
 import { SimpleLayout } from '@/components/SimpleLayout'
-import { Tab } from '@headlessui/react'
-import clsx from 'clsx'
+import { motion, AnimatePresence } from 'framer-motion'
+import Image from 'next/image'
 import fs from 'fs'
 import path from 'path'
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
-import Image from 'next/image'
-import { CardContainer, CardBody, CardItem } from '@/components/ui/3d-card'
 
-function PhotoCard({ photo, index }) {
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [isHovered, setIsHovered] = useState(false)
-  const ref = useRef(null)
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"]
-  })
+function Lightbox({ photos, currentIndex, onClose, onPrev, onNext }) {
+  useEffect(() => {
+    function handleKey(e) {
+      if (e.key === 'Escape') onClose()
+      if (e.key === 'ArrowLeft') onPrev()
+      if (e.key === 'ArrowRight') onNext()
+    }
+    document.addEventListener('keydown', handleKey)
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.removeEventListener('keydown', handleKey)
+      document.body.style.overflow = ''
+    }
+  }, [onClose, onPrev, onNext])
 
-  // Different parallax speeds for different positions
-  const y = useTransform(
-    scrollYProgress,
-    [0, 1],
-    [index % 2 === 0 ? 100 : -100, 0]
-  )
+  const photo = photos[currentIndex]
 
   return (
-    <>
-      <motion.div
-        ref={ref}
-        style={{ y }}
-        className="w-full"
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.2 }}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <button
+        onClick={onClose}
+        className="absolute right-4 top-4 z-10 rounded-full bg-white/10 p-2 text-white transition hover:bg-white/20"
+        aria-label="Close"
       >
-        <CardContainer className="w-full">
-          <CardBody 
-            className="bg-gray-50 relative group/card dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.15] dark:bg-black dark:border-white/[0.2] border-black/[0.1] w-full h-auto rounded-xl p-4 border transition-all duration-300 hover:border-emerald-500/20"
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
+        <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+
+      {photos.length > 1 && (
+        <>
+          <button
+            onClick={(e) => { e.stopPropagation(); onPrev() }}
+            className="absolute left-4 z-10 rounded-full bg-white/10 p-3 text-white transition hover:bg-white/20"
+            aria-label="Previous photo"
           >
-            <CardItem translateZ="150" className="w-full">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="relative overflow-hidden rounded-lg"
-                style={{
-                  height: isHovered ? '400px' : '300px',
-                  width: '100%',
-                  transition: 'all 0.3s ease-in-out',
-                  transform: isHovered ? 'perspective(1000px) rotateX(5deg) rotateY(5deg)' : 'perspective(1000px) rotateX(0deg) rotateY(0deg)',
-                  transformStyle: 'preserve-3d'
-                }}
-                onClick={() => setIsModalOpen(true)}
-              >
-                <Image
-                  src={photo.src}
-                  alt={photo.alt}
-                  fill
-                  className="object-cover transition-all duration-500 hover:scale-110"
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  priority={index < 2}
-                />
-                <motion.div 
-                  className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-black/0"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: isHovered ? 1 : 0 }}
-                  transition={{ duration: 0.3 }}
-                />
-              </motion.div>
-            </CardItem>
-            <CardItem
-              translateZ="200"
-              className="text-neutral-500 text-sm max-w-sm mt-4 dark:text-neutral-300"
-              style={{
-                transform: isHovered ? 'translateZ(50px)' : 'translateZ(0)',
-                transition: 'transform 0.3s ease-in-out'
-              }}
-            >
-              <motion.h3 
-                className="mt-2 text-2xl font-semibold text-gray-900 dark:text-white group-hover/card:text-emerald-500 transition-colors duration-300"
-                animate={{ 
-                  y: isHovered ? 0 : 10,
-                  opacity: isHovered ? 1 : 0.8,
-                  scale: isHovered ? 1.05 : 1
-                }}
-                transition={{ duration: 0.3 }}
-              >
-                {photo.title}
-              </motion.h3>
-              <motion.p 
-                className="mt-3 text-lg text-gray-500 dark:text-gray-400 group-hover/card:text-gray-600 dark:group-hover/card:text-gray-300 transition-colors duration-300"
-                animate={{ 
-                  y: isHovered ? 0 : 5,
-                  opacity: isHovered ? 1 : 0.8,
-                  scale: isHovered ? 1.02 : 1
-                }}
-                transition={{ duration: 0.3, delay: 0.1 }}
-              >
-                {photo.description}
-              </motion.p>
-              <motion.p 
-                className="mt-3 text-base text-gray-400 dark:text-gray-500 group-hover/card:text-emerald-500/80 transition-colors duration-300"
-                animate={{ 
-                  y: isHovered ? 0 : 5,
-                  opacity: isHovered ? 1 : 0.8,
-                  scale: isHovered ? 1.02 : 1
-                }}
-                transition={{ duration: 0.3, delay: 0.2 }}
-              >
-                {photo.location}
-              </motion.p>
-            </CardItem>
-          </CardBody>
-        </CardContainer>
+            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <button
+            onClick={(e) => { e.stopPropagation(); onNext() }}
+            className="absolute right-4 z-10 rounded-full bg-white/10 p-3 text-white transition hover:bg-white/20"
+            aria-label="Next photo"
+          >
+            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </>
+      )}
+
+      <motion.div
+        key={currentIndex}
+        initial={{ scale: 0.95, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.95, opacity: 0 }}
+        transition={{ duration: 0.2 }}
+        className="relative max-h-[85vh] max-w-[90vw]"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <Image
+          src={photo.src}
+          alt={photo.alt}
+          width={1200}
+          height={800}
+          className="max-h-[85vh] w-auto rounded-lg object-contain"
+          sizes="90vw"
+          priority
+        />
+        {photo.title && (
+          <div className="absolute bottom-0 left-0 right-0 rounded-b-lg bg-gradient-to-t from-black/60 to-transparent px-6 pb-4 pt-12">
+            <p className="text-lg font-medium text-white">{photo.title}</p>
+            {photo.location && (
+              <p className="mt-1 text-sm text-white/70">{photo.location}</p>
+            )}
+          </div>
+        )}
       </motion.div>
 
-      {isModalOpen && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm"
-          onClick={() => setIsModalOpen(false)}
-        >
-          <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.9, opacity: 0 }}
-            className="relative w-[90vw] max-w-6xl aspect-[4/3] p-4"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="relative w-full h-full rounded-xl overflow-hidden group">
-              {/* Border container with subtle glow */}
-              <div className="absolute inset-0 rounded-xl border-2 border-emerald-500/30 shadow-[0_0_15px_rgba(16,185,129,0.2)]" />
-              
-              {/* Image */}
-              <Image
-                src={photo.src}
-                alt={photo.alt}
-                fill
-                className="object-contain"
-                sizes="90vw"
-              />
-              
-              {/* Subtle inner border */}
-              <div className="absolute inset-0 rounded-xl border border-emerald-500/20 pointer-events-none" />
-            </div>
-            <button
-              onClick={() => setIsModalOpen(false)}
-              className="absolute top-6 right-6 p-2 text-white bg-black/50 rounded-full hover:bg-black/70 transition-colors duration-300 hover:scale-110 border border-emerald-500/30 hover:border-emerald-500/50"
-            >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-          </motion.div>
-        </motion.div>
-      )}
-    </>
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-sm text-white/50">
+        {currentIndex + 1} / {photos.length}
+      </div>
+    </motion.div>
+  )
+}
+
+function PhotoCard({ photo, index, onClick }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
+      className="group cursor-pointer"
+      onClick={onClick}
+    >
+      <div className="relative overflow-hidden rounded-xl bg-zinc-100 dark:bg-zinc-800">
+        <Image
+          src={photo.src}
+          alt={photo.alt}
+          width={600}
+          height={400}
+          className="w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+        <div className="absolute bottom-0 left-0 right-0 translate-y-4 px-4 pb-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+          <p className="text-sm font-medium text-white">{photo.title}</p>
+          {photo.location && (
+            <p className="mt-0.5 text-xs text-white/70">{photo.location}</p>
+          )}
+        </div>
+      </div>
+    </motion.div>
   )
 }
 
 export default function Photography({ photos }) {
+  const [lightboxIndex, setLightboxIndex] = useState(null)
+
+  const openLightbox = useCallback((index) => setLightboxIndex(index), [])
+  const closeLightbox = useCallback(() => setLightboxIndex(null), [])
+  const prevPhoto = useCallback(() => {
+    setLightboxIndex((i) => (i === 0 ? photos.length - 1 : i - 1))
+  }, [photos.length])
+  const nextPhoto = useCallback(() => {
+    setLightboxIndex((i) => (i === photos.length - 1 ? 0 : i + 1))
+  }, [photos.length])
+
   return (
     <>
       <Head>
         <title>Photography - Manish Kumar</title>
         <meta
           name="description"
-          content="A collection of my photography work, capturing moments and landscapes."
+          content="A collection of my photography — capturing moments, landscapes, and the beauty in everyday life."
         />
       </Head>
       <SimpleLayout
         title="Capturing moments through my lens."
-        intro="I love photography as a way to capture and share the beauty I see in the world. Here's a collection of my favorite shots."
+        intro="Photography is how I slow down and notice the world. Here are some of my favorite shots from travels and everyday life."
       >
-        <Container className="mt-16 sm:mt-20">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="grid grid-cols-1 gap-12 sm:gap-16 lg:gap-20 sm:grid-cols-2"
-          >
-            {photos.map((photo, photoIndex) => (
-              <PhotoCard key={photoIndex} photo={photo} index={photoIndex} />
+        <div className="mt-16 sm:mt-20">
+          <div className="columns-1 gap-4 sm:columns-2 lg:columns-3">
+            {photos.map((photo, index) => (
+              <div key={photo.src} className="mb-4 break-inside-avoid">
+                <PhotoCard
+                  photo={photo}
+                  index={index}
+                  onClick={() => openLightbox(index)}
+                />
+              </div>
             ))}
-          </motion.div>
-        </Container>
+          </div>
+        </div>
       </SimpleLayout>
+
+      <AnimatePresence>
+        {lightboxIndex !== null && (
+          <Lightbox
+            photos={photos}
+            currentIndex={lightboxIndex}
+            onClose={closeLightbox}
+            onPrev={prevPhoto}
+            onNext={nextPhoto}
+          />
+        )}
+      </AnimatePresence>
     </>
   )
 }
@@ -208,30 +191,26 @@ export async function getStaticProps() {
   const filenames = fs.readdirSync(photosDirectory)
 
   const photos = filenames
-    .filter(filename => {
+    .filter((filename) => {
       const ext = path.extname(filename).toLowerCase()
       return ['.jpg', '.jpeg', '.png', '.gif'].includes(ext)
     })
-    .map(filename => {
-      // Remove file extension and convert to title case
+    .map((filename) => {
       const title = filename
-        .replace(/\.[^/.]+$/, '') // Remove extension
-        .split(/[-_]/) // Split by hyphen or underscore
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .replace(/\.[^/.]+$/, '')
+        .split(/[-_]/)
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
         .join(' ')
 
       return {
         src: `/photography/${filename}`,
         alt: title,
-        title: title,
-        description: '', // You can add descriptions in a separate JSON file if needed
-        location: '', // You can add locations in a separate JSON file if needed
+        title,
+        location: '',
       }
     })
 
   return {
-    props: {
-      photos,
-    },
+    props: { photos },
   }
 }

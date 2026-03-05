@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manish Kumar - Resume v2</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @page {
+            size: A4;
+            margin: 0;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            font-size: 9.6px;
+            line-height: 1.42;
+            color: #1a1a1a;
+            background: #fff;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        .page {
+            width: 8.5in;
+            padding: 0.4in 0.5in 0.3in 0.5in;
+            margin: 0 auto;
+        }
+
+        /* ── Header ── */
+        .header {
+            text-align: center;
+            margin-bottom: 10px;
+            padding-bottom: 7px;
+            border-bottom: 2px solid #111;
+        }
+
+        .header h1 {
+            font-size: 21px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #111;
+            margin-bottom: 1px;
+        }
+
+        .header .subtitle {
+            font-size: 11px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .header .contact {
+            font-size: 9.2px;
+            color: #444;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 3px 12px;
+        }
+
+        .header .contact a {
+            color: #0056b3;
+            text-decoration: none;
+        }
+
+        .header .contact a:hover {
+            text-decoration: underline;
+        }
+
+        .header .contact .sep {
+            color: #999;
+        }
+
+        /* ── Key Impact (ATS-safe text line) ── */
+        .key-impact {
+            font-size: 9.5px;
+            color: #333;
+            text-align: center;
+            margin-top: 6px;
+            margin-bottom: 6px;
+            padding: 5px 0;
+            border-top: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .key-impact strong {
+            color: #0056b3;
+        }
+
+        /* ── Sections ── */
+        .section {
+            margin-bottom: 8px;
+        }
+
+        .section-title {
+            font-size: 10.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: #111;
+            border-bottom: 1.5px solid #333;
+            padding-bottom: 1px;
+            margin-bottom: 8px;
+        }
+
+        /* ── Projects ── */
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 1px;
+        }
+
+        .project-header .project-name {
+            font-size: 10.5px;
+            font-weight: 700;
+            color: #111;
+        }
+
+        .project-header .project-links {
+            font-size: 9px;
+            color: #0056b3;
+        }
+
+        .project-header .project-links a {
+            color: #0056b3;
+            text-decoration: none;
+        }
+
+        .project-header .project-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* ── Experience ── */
+        .exp-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 1px;
+        }
+
+        .exp-header .company {
+            font-size: 11px;
+            font-weight: 700;
+            color: #111;
+        }
+
+        .exp-header .location {
+            font-size: 9.5px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .exp-subheader {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 3px;
+        }
+
+        .exp-subheader .role {
+            font-size: 10.2px;
+            font-weight: 500;
+            font-style: italic;
+            color: #333;
+        }
+
+        .exp-subheader .dates {
+            font-size: 9.5px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .tech-stack {
+            font-size: 9px;
+            color: #444;
+            margin-bottom: 3px;
+            font-style: italic;
+        }
+
+        .tech-stack strong {
+            font-style: normal;
+            color: #333;
+        }
+
+        ul {
+            padding-left: 15px;
+            margin-bottom: 3px;
+        }
+
+        ul li {
+            margin-bottom: 2.5px;
+            text-align: justify;
+        }
+
+        /* ── Skills ── */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: 3px 8px;
+        }
+
+        .skills-grid .skill-category {
+            font-weight: 600;
+            color: #222;
+            font-size: 9.4px;
+        }
+
+        .skills-grid .skill-items {
+            color: #333;
+            font-size: 9.4px;
+        }
+
+        /* ── Education ── */
+        .edu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+
+        .edu-header .school {
+            font-size: 10.5px;
+            font-weight: 700;
+            color: #111;
+        }
+
+        .edu-header .edu-dates {
+            font-size: 9.5px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .edu-detail {
+            font-size: 10px;
+            color: #333;
+            margin-bottom: 1px;
+        }
+
+        .edu-coursework {
+            font-size: 9.4px;
+            color: #555;
+            font-style: italic;
+            margin-top: 3px;
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                background: white;
+            }
+            .page {
+                padding: 0.45in 0.55in 0.4in 0.55in;
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+
+        <!-- ═══════════════ HEADER ═══════════════ -->
+        <div class="header">
+            <h1>Manish Kumar</h1>
+            <div class="subtitle">Software Development Engineer II &nbsp;|&nbsp; Full-Stack &nbsp;|&nbsp; 25M+ Users &nbsp;|&nbsp; Distributed Systems</div>
+            <div class="contact">
+                <span>Bengaluru, India</span>
+                <span class="sep">|</span>
+                <span>+91-8637056324</span>
+                <span class="sep">|</span>
+                <a href="mailto:k.manu00005@gmail.com">k.manu00005@gmail.com</a>
+                <span class="sep">|</span>
+                <a href="https://linkedin.com/in/manishkumar005" target="_blank">LinkedIn</a>
+                <span class="sep">|</span>
+                <a href="https://github.com/manu05X" target="_blank">GitHub</a>
+                <span class="sep">|</span>
+                <a href="#" target="_blank">Portfolio</a>
+            </div>
+        </div>
+
+        <!-- ═══════════════ KEY IMPACT (ATS-safe) ═══════════════ -->
+        <div class="key-impact">
+            Key Impact: <strong>$144K annual cost savings</strong> &nbsp;&bull;&nbsp;
+            <strong>75% faster response times</strong> &nbsp;&bull;&nbsp;
+            <strong>25M+ monthly active users</strong> &nbsp;&bull;&nbsp;
+            <strong>100% registration recovery</strong> &nbsp;&bull;&nbsp;
+            <strong>40% support ticket reduction</strong>
+        </div>
+
+        <!-- ═══════════════ SKILLS ═══════════════ -->
+        <div class="section">
+            <div class="section-title">Technical Skills</div>
+            <div class="skills-grid">
+                <span class="skill-category">Languages</span>
+                <span class="skill-items">Java 17, JavaScript, C++, Go</span>
+
+                <span class="skill-category">Frameworks</span>
+                <span class="skill-items">Spring Boot, Spring WebFlux, Project Reactor, React.js, Redux, Node.js, REST APIs, Microservices</span>
+
+                <span class="skill-category">Databases & Cache</span>
+                <span class="skill-items">DynamoDB, Redis (ElastiCache), MySQL, PostgreSQL, MongoDB, S3-backed TTL Cache</span>
+
+                <span class="skill-category">Cloud & DevOps</span>
+                <span class="skill-items">AWS (ECS Fargate, S3, Secrets Manager, CloudWatch, KMS), Docker, Terraform, Jenkins, Akamai CDN</span>
+
+                <span class="skill-category">Observability</span>
+                <span class="skill-items">Splunk, SignalFx (APM/Metrics/Traces), Grafana, Structured Logging, Distributed Tracing</span>
+
+                <span class="skill-category">Architecture</span>
+                <span class="skill-items">Reactive Programming, Event-Driven Design, JWT Authentication, Rate Limiting, Circuit Breaker, Cache-Aside</span>
+            </div>
+        </div>
+
+        <!-- ═══════════════ EXPERIENCE ═══════════════ -->
+        <div class="section">
+            <div class="section-title">Professional Experience</div>
+
+            <!-- ── Nike ── -->
+            <div class="exp-header">
+                <span class="company">Nike, Inc. &mdash; Community Experience Platform (CXP)</span>
+                <span class="location">Bengaluru, India</span>
+            </div>
+            <div class="exp-subheader">
+                <span class="role">Software Development Engineer II (Full-Stack)</span>
+                <span class="dates">Jan 2025 &ndash; Present</span>
+            </div>
+            <div class="tech-stack">
+                <strong>Stack:</strong> Java 17, Spring WebFlux, Redis, DynamoDB, AWS ECS Fargate, Terraform, Jenkins, Akamai, SignalFx, Splunk, Docker
+            </div>
+            <ul>
+                <li>
+                    <strong>Bot Protection & Cost Optimization:</strong> Engineered multi-layered bot protection using Redis caching, rate limiting, and idempotency keys in Spring WebFlux, reducing WAF infrastructure by 40% (<strong>$144K annual savings</strong>), slashing API traffic by 70%, and improving response times by 75% (320ms &rarr; 80ms) for Nike's event platform serving 25M+ monthly users.
+                </li>
+                <li>
+                    <strong>Fault-Tolerant Registration:</strong> Designed DynamoDB-based queue with asynchronous processing to handle third-party (Eventtia) API failures, achieving <strong>100% registration recovery</strong> during outages by implementing conditional writes for race condition handling, duplicate prevention via conditional puts, and exponential backoff retry with status consistency checks.
+                </li>
+                <li>
+                    <strong>Intelligent Error Code Mapping:</strong> Built error code determination system translating unstructured third-party API errors into 5 structured error codes with configuration-driven JSON mapping and custom exception hierarchy, <strong>reducing support tickets by 40%</strong> and enabling frontend to display actionable, localized user messages across US/EU regions.
+                </li>
+                <li>
+                    <strong>Multi-Layer Caching Architecture:</strong> Architected three-tier caching strategy &mdash; Akamai CDN (edge), Redis ElastiCache (PairwiseId 30-day TTL, attendee status 60s), and in-memory (translations, feature flags) &mdash; with event-driven cache invalidation on capacity errors, achieving <strong>78% cache hit rate</strong> and enabling 3x peak load handling without scaling.
+                </li>
+                <li>
+                    <strong>Conditional Registration:</strong> Diagnosed and resolved Eventtia API inconsistency where rejected registrations were only returned via query parameters, standardizing API integration to achieve 100% consistency in displaying approved/rejected registrations and <strong>reducing user confusion by 78%</strong>.
+                </li>
+                <li>
+                    <strong>Security & Multi-Region Deployment:</strong> Architected JWT-based shim layer for Nike-to-Eventtia authentication reducing integration overhead by 60%; rolled out multi-region deployment (US/EU) via Terraform, S3, Secrets Manager, and environment profiling with automated secret rotation.
+                </li>
+                <li>
+                    <strong>Observability & Reliability:</strong> Led observability enhancements by configuring SignalFx sidecars with structured logging and ThreadContext propagation in reactive flows, increasing log accuracy by 60% and accelerating incident resolution by 25%; set up CloudWatch alarms and auto-scaling policies.
+                </li>
+            </ul>
+
+            <!-- ── Samsung ── -->
+            <div class="exp-header" style="margin-top: 6px;">
+                <span class="company">Samsung Semiconductor India Research</span>
+                <span class="location">Bengaluru, India</span>
+            </div>
+            <div class="exp-subheader">
+                <span class="role">Associate Staff Engineer &mdash; Senior Software Engineer</span>
+                <span class="dates">Jul 2021 &ndash; Oct 2024</span>
+            </div>
+            <div class="tech-stack">
+                <strong>Stack:</strong> Java, Spring Boot, Spring Security, React.js, JavaScript, Docker, Grafana, Kafka, MySQL, Inno Setup
+            </div>
+            <ul>
+                <li>
+                    Architected in-house performance profiler and analysis tools using Java, Spring Boot, and React, eliminating external vendor dependency and achieving <strong>$70,000 annual cost savings</strong>.
+                </li>
+                <li>
+                    Containerized UI and API servers with Docker and docker-compose, establishing CI/CD pipelines that <strong>cut deployment time by 50%</strong> and reduced environment-specific bugs by 70% across 15+ developer machines.
+                </li>
+                <li>
+                    Built authentication service using Spring Security with role-based access control for internal dashboard; implemented front-end features using React.js delivering a seamless interface across 5 departments.
+                </li>
+                <li>
+                    Optimized telemetry data handling, boosting sequential read/write speeds by 8% and random read/write by 5%; increased unit test coverage from 36% to 60%, reducing production bugs by 25%.
+                </li>
+                <li>
+                    Led sprint planning, cross-team demos, and onboarding sessions for 5+ junior developers, accelerating feature rollout by 20% and reducing new-hire ramp-up time by 30%.
+                </li>
+            </ul>
+        </div>
+
+        <!-- ═══════════════ PROJECTS ═══════════════ -->
+        <div class="section">
+            <div class="section-title">Projects</div>
+
+            <div class="project-header">
+                <span class="project-name">ShopStream &mdash; Full-Stack E-Commerce Platform</span>
+                <span class="project-links"><a href="https://github.com/manu05X" target="_blank">GitHub</a></span>
+            </div>
+            <div class="tech-stack">
+                <strong>Stack:</strong> Java 17, Spring Boot, React.js, Redux, PostgreSQL, Redis, Stripe API, Docker, AWS S3, JWT, Kafka
+            </div>
+            <ul>
+                <li>
+                    Built a production-grade e-commerce platform with <strong>microservices architecture</strong> &mdash; Product Catalog, Cart, Order, Payment, and Notification services communicating via Kafka event-driven messaging and REST APIs.
+                </li>
+                <li>
+                    Implemented <strong>Stripe payment integration</strong> with idempotent checkout, order state machine (CREATED &rarr; PAID &rarr; SHIPPED &rarr; DELIVERED), and webhook-based payment confirmation ensuring zero duplicate charges.
+                </li>
+                <li>
+                    Designed <strong>Redis-backed cart &amp; session management</strong> with TTL-based expiry, product catalog caching achieving sub-50ms response times, and PostgreSQL for transactional order/inventory data with optimistic locking to prevent overselling.
+                </li>
+                <li>
+                    Built responsive React storefront with Redux state management, JWT authentication with refresh token rotation, role-based access (Admin/Customer), and image uploads to AWS S3 with CDN delivery.
+                </li>
+            </ul>
+        </div>
+
+        <!-- ═══════════════ EDUCATION ═══════════════ -->
+        <div class="section">
+            <div class="section-title">Education</div>
+            <div class="edu-header">
+                <span class="school">Jadavpur University &mdash; Bachelor of Engineering in Information Technology</span>
+                <span class="edu-dates">Jul 2017 &ndash; Apr 2021 &nbsp;|&nbsp; Kolkata, India</span>
+            </div>
+            <div class="edu-coursework">
+                Coursework: Data Structures & Algorithms, OOP, Databases & SQL, Operating Systems, Distributed Systems, Web Development, Computer Networks
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

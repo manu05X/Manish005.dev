@@ -3,10 +3,8 @@ import Link from 'next/link'
 import clsx from 'clsx'
 import { useState } from 'react'
 
-import { BriefcaseIcon } from '@/components/Icons'
+import { BriefcaseIcon, ArrowDownIcon } from '@/components/SocialIcons'
 import { Button } from '@/components/Button'
-import { ArrowDownIcon } from '@/components/SocialIcons'
-import { saveAs } from 'file-saver'
 
 import logoSamsung from '@/images/logos/samsung.gif'
 import logoNike from '@/images/nikelogo.jpg'
@@ -95,7 +93,7 @@ export function Resume() {
       ]
     },
     {
-      company: 'Zen Construction  -  Banglore',
+      company: 'Zen Construction  -  Bangalore',
       title: 'Web Developer',
       logo: logoFalco,
       start: 'Nov 2023',
@@ -114,9 +112,7 @@ export function Resume() {
   ])
 
   const handleDownloadCV = () => {
-    const pdfPath = '/resources/ManishCV.pdf';
-    saveAs(pdfPath, 'ManishResume.pdf');
-    window.open(pdfPath, '_blank');
+    window.open('/api/resume-pdf', '_blank')
   };
 
   const visibleResume = isExpanded ? resume : resume.slice(0, 1)

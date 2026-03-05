@@ -306,11 +306,16 @@ module.exports = {
     extend: {
       animation: {
         shine: 'shine 2s linear infinite',
+        shimmer: 'shimmer 3s ease-in-out infinite',
       },
       keyframes: {
         shine: {
           '0%': { transform: 'translateX(-100%)' },
           '100%': { transform: 'translateX(100%)' },
+        },
+        shimmer: {
+          '0%, 100%': { backgroundPosition: '0% 50%' },
+          '50%': { backgroundPosition: '100% 50%' },
         },
       },
     },
