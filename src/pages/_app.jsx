@@ -7,6 +7,7 @@ import { Analytics } from "@vercel/analytics/react";
 
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
+import { ChatWidget } from "@/components/ChatWidget";
 
 function usePrevious(value) {
   let ref = useRef();
@@ -114,6 +115,7 @@ export default function App({ Component, pageProps, router }) {
         </main>
         <Footer />
       </div>
+      <ChatWidget />
       <Analytics />
     </>
   );
