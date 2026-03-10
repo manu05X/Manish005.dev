@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { useRef } from 'react'
+import { useRef, useState, useEffect } from 'react'
 
 import { Container } from '@/components/Container'
 import {
@@ -14,7 +14,7 @@ function NavLink({ href, children }) {
   return (
     <Link
       href={href}
-      className="transition hover:text-teal-500 dark:hover:text-teal-400"
+      className="underline-fill transition hover:text-emerald-500 dark:hover:text-emerald-400"
     >
       {children}
     </Link>
@@ -30,7 +30,7 @@ function SocialIconLink({ href, icon: Icon, label }) {
       target="_blank"
       rel="noopener noreferrer"
     >
-      <Icon className="h-5 w-5 fill-zinc-400 transition group-hover:fill-teal-500 dark:fill-zinc-500 dark:group-hover:fill-teal-400" />
+      <Icon className="h-5 w-5 fill-zinc-400 transition group-hover:fill-emerald-500 dark:fill-zinc-500 dark:group-hover:fill-emerald-400" />
     </Link>
   )
 }
@@ -67,11 +67,68 @@ function MagneticWrap({ children }) {
   )
 }
 
+function LiveClock() {
+  const [time, setTime] = useState('')
+
+  useEffect(() => {
+    function tick() {
+      const now = new Date()
+      const ist = now.toLocaleTimeString('en-IN', {
+        timeZone: 'Asia/Kolkata',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true,
+      })
+      setTime(ist)
+    }
+    tick()
+    const id = setInterval(tick, 1000)
+    return () => clearInterval(id)
+  }, [])
+
+  if (!time) return null
+
+  return (
+    <span className="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 px-3 py-1 text-xs text-zinc-500 dark:border-zinc-700 dark:text-zinc-400">
+      <span className="live-dot" style={{ width: 5, height: 5 }} />
+      IST {time}
+    </span>
+  )
+}
+
+function HeartBadge() {
+  return (
+    <span
+      className="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 px-3 py-1 text-xs text-zinc-500 dark:border-zinc-700 dark:text-zinc-400"
+    >
+      Built with{' '}
+      <span
+        className="font-semibold text-red-500"
+        style={{ display: 'inline-block', animation: 'heartbeat 1.4s ease-in-out infinite' }}
+      >
+        ❤️
+      </span>{' '}
+      using{' '}
+      <span className="font-semibold text-zinc-700 dark:text-zinc-300">Next.js</span>
+      {' '}&amp;{' '}
+      <span className="font-semibold text-zinc-700 dark:text-zinc-300">Tailwind CSS</span>
+    </span>
+  )
+}
+
 export function Footer() {
   return (
     <footer className="mt-32">
       <Container.Outer>
-        <div className="border-t border-zinc-100 pb-16 pt-10 dark:border-zinc-700/40">
+        {/* Gradient top border */}
+        <div
+          className="h-px w-full"
+          style={{
+            background: 'linear-gradient(90deg, transparent, #6EE7B7 30%, #818CF8 70%, transparent)',
+          }}
+        />
+        <div className="pb-16 pt-10">
           <Container.Inner>
             <div className="flex flex-col gap-8">
               {/* Tagline */}
@@ -98,23 +155,19 @@ export function Footer() {
                 <SocialIconLink href="https://medium.com/@k.manu00005" icon={MediumIcon} label="Medium" />
               </div>
 
-              {/* Copyright + Built with badge + Back to top */}
-              <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
+              {/* Copyright + badges + back to top */}
+              <div className="flex flex-col items-center gap-3 sm:flex-row sm:flex-wrap sm:justify-between">
                 <p className="text-sm text-zinc-400 dark:text-zinc-500">
                   &copy; {new Date().getFullYear()} Manish Kumar. All rights reserved.
                 </p>
-                <div className="flex items-center gap-4">
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 px-3 py-1 text-xs text-zinc-500 dark:border-zinc-700 dark:text-zinc-400">
-                    Built with
-                    <span className="font-semibold text-zinc-700 dark:text-zinc-300">Next.js</span>
-                    &amp;
-                    <span className="font-semibold text-zinc-700 dark:text-zinc-300">Tailwind CSS</span>
-                  </span>
+                <div className="flex flex-wrap items-center justify-center gap-3">
+                  <LiveClock />
+                  <HeartBadge />
                   <MagneticWrap>
                     <button
                       onClick={scrollToTop}
                       aria-label="Back to top"
-                      className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-zinc-200 text-zinc-500 transition hover:border-teal-300 hover:text-teal-500 dark:border-zinc-700 dark:text-zinc-400 dark:hover:border-teal-600 dark:hover:text-teal-400"
+                      className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-zinc-200 text-zinc-500 transition hover:border-emerald-300 hover:text-emerald-500 dark:border-zinc-700 dark:text-zinc-400 dark:hover:border-emerald-600 dark:hover:text-emerald-400"
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
                         <path fillRule="evenodd" d="M10 17a.75.75 0 01-.75-.75V5.612L5.29 9.77a.75.75 0 01-1.08-1.04l5.25-5.5a.75.75 0 011.08 0l5.25 5.5a.75.75 0 11-1.08 1.04l-3.96-4.158V16.25A.75.75 0 0110 17z" clipRule="evenodd" />
@@ -127,6 +180,7 @@ export function Footer() {
           </Container.Inner>
         </div>
       </Container.Outer>
+
     </footer>
   )
 }

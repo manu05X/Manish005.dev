@@ -105,26 +105,41 @@ function PhotoCard({ photo, index, onClick }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-40px' }}
+      transition={{ duration: 0.5, delay: (index % 6) * 0.07, ease: [0.22, 1, 0.36, 1] }}
       className="group cursor-pointer"
       onClick={onClick}
     >
       <div className="relative overflow-hidden rounded-xl bg-zinc-100 dark:bg-zinc-800">
+        {/* Film grain overlay */}
+        <div
+          className="pointer-events-none absolute inset-0 z-10 opacity-[0.04] mix-blend-overlay"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23g)'/%3E%3C/svg%3E")`,
+            backgroundSize: '120px 120px',
+          }}
+        />
         <Image
           src={photo.src}
           alt={photo.alt}
           width={600}
           height={400}
-          className="w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          className="w-full object-cover transition-transform duration-700 group-hover:scale-105"
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          placeholder="blur"
+          blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-        <div className="absolute bottom-0 left-0 right-0 translate-y-4 px-4 pb-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
-          <p className="text-sm font-medium text-white">{photo.title}</p>
-          {photo.location && (
-            <p className="mt-0.5 text-xs text-white/70">{photo.location}</p>
-          )}
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+        {/* Location badge — slides up from bottom */}
+        <div className="absolute bottom-0 left-0 right-0 translate-y-full px-4 pb-4 pt-8 transition-transform duration-300 ease-out group-hover:translate-y-0">
+          <div className="inline-flex items-center gap-1.5 rounded-full bg-black/40 px-3 py-1.5 backdrop-blur-sm">
+            <svg className="h-3 w-3 text-white/70" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+            </svg>
+            <p className="text-xs font-medium text-white">{photo.title}</p>
+          </div>
         </div>
       </div>
     </motion.div>

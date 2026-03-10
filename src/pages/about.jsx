@@ -2,6 +2,8 @@ import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
 import clsx from 'clsx'
+import { motion, useInView } from 'framer-motion'
+import { useRef } from 'react'
 
 import { Container } from '@/components/Container'
 import smokeImage from '@/images/photos/Smoke.jpg'
@@ -17,9 +19,9 @@ function SocialLink({ className, href, children, icon: Icon }) {
       <li className={clsx(className, 'flex')}>
         <Link
           href={href}
-          className="group flex text-sm font-medium text-zinc-800 transition hover:text-teal-500 dark:text-zinc-200 dark:hover:text-teal-500"
+          className="group flex text-sm font-medium text-zinc-800 transition hover:text-emerald-500 dark:text-zinc-200 dark:hover:text-emerald-400"
         >
-          <Icon className="h-6 w-6 flex-none fill-zinc-500 transition group-hover:fill-teal-500" />
+          <Icon className="h-6 w-6 flex-none fill-zinc-500 transition group-hover:fill-emerald-500" />
           <span className="ml-4">{children}</span>
         </Link>
       </li>
@@ -71,14 +73,113 @@ const milestones = [
   },
 ]
 
-const funFacts = [
-  { icon: '\u{1F3A8}', text: 'I sketch in my free time \u2014 the picture on this page is one of mine' },
-  { icon: '\u{1F30D}', text: 'I love traveling and have bounced between Asansol, Kolkata, and Bangalore' },
-  { icon: '\u2615',    text: 'Fueled by chai and late-night debugging sessions' },
-  { icon: '\u{1F4DD}', text: 'I write about software engineering on Medium' },
-  { icon: '\u{1F3B5}', text: 'Lo-fi beats are my coding soundtrack' },
-  { icon: '\u{1F331}', text: 'Open source contributor and lifelong learner' },
+// Bento fun facts — each card has a size hint
+const bentoFacts = [
+  {
+    icon: '\u{1F3A8}',
+    title: 'Amateur Artist',
+    text: 'I sketch in my free time \u2014 the picture on this page is one of mine.',
+    span: 'sm:col-span-2',
+    accent: 'from-violet-500/10 to-transparent',
+  },
+  {
+    icon: '\u{1F30D}',
+    title: 'Explorer at Heart',
+    text: 'Bounced between Asansol, Kolkata, and Bangalore. Always curious about the next city.',
+    span: '',
+    accent: 'from-emerald-500/10 to-transparent',
+  },
+  {
+    icon: '\u2615',
+    title: 'Chai-Powered',
+    text: 'Fueled by chai and late-night debugging sessions.',
+    span: '',
+    accent: 'from-amber-500/10 to-transparent',
+  },
+  {
+    icon: '\u{1F4DD}',
+    title: 'Tech Writer',
+    text: 'I write about software engineering on Medium.',
+    span: '',
+    accent: 'from-blue-500/10 to-transparent',
+  },
+  {
+    icon: '\u{1F3B5}',
+    title: 'Lo-fi Devotee',
+    text: 'Lo-fi beats are my coding soundtrack. Always on in the background.',
+    span: 'sm:col-span-2',
+    accent: 'from-pink-500/10 to-transparent',
+  },
+  {
+    icon: '\u{1F331}',
+    title: 'Open Source Fan',
+    text: 'Open source contributor and lifelong learner. Every PR is a small gift to the community.',
+    span: '',
+    accent: 'from-emerald-500/10 to-transparent',
+  },
 ]
+
+const currently = [
+  { label: 'Building', value: 'AI-powered portfolio tools & event platform at Nike', icon: '\u{1F6E0}\uFE0F' },
+  { label: 'Reading', value: 'Designing Data-Intensive Applications — Martin Kleppmann', icon: '\u{1F4DA}' },
+  { label: 'Learning', value: 'Distributed systems & Kubernetes deep-dive', icon: '\u{1F9E0}' },
+  { label: 'Listening', value: 'ChillHop Music & lo-fi coding playlists', icon: '\u{1F3A7}' },
+]
+
+// Animated timeline line using Framer Motion
+function AnimatedTimeline() {
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: true, margin: '-80px' })
+
+  return (
+    <div className="mt-10 relative" ref={ref}>
+      {/* Animated vertical line */}
+      <motion.div
+        className="absolute left-[19px] top-2 bottom-2 w-px bg-gradient-to-b from-emerald-400 via-violet-400 to-zinc-300 dark:to-zinc-700 origin-top"
+        initial={{ scaleY: 0 }}
+        animate={isInView ? { scaleY: 1 } : { scaleY: 0 }}
+        transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+      />
+      <ol className="space-y-10">
+        {milestones.map((milestone, index) => (
+          <motion.li
+            key={index}
+            className="relative pl-14"
+            initial={{ opacity: 0, x: -20 }}
+            animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
+            transition={{ duration: 0.5, delay: 0.3 + index * 0.12, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <div className={clsx(
+              'absolute left-0 top-0.5 flex h-10 w-10 items-center justify-center rounded-full text-lg ring-4 ring-white dark:ring-zinc-900',
+              milestone.current
+                ? 'bg-emerald-500/10 ring-emerald-500/20'
+                : 'bg-zinc-100 dark:bg-zinc-800'
+            )}>
+              <span>{milestone.icon}</span>
+            </div>
+            <div>
+              <span className={clsx(
+                'inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold',
+                milestone.current
+                  ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
+                  : 'bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400'
+              )}>
+                {milestone.year}
+                {milestone.current && ' \u2014 Present'}
+              </span>
+              <h3 className="mt-2 text-base font-semibold text-zinc-900 dark:text-zinc-100">
+                {milestone.title}
+              </h3>
+              <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
+                {milestone.description}
+              </p>
+            </div>
+          </motion.li>
+        ))}
+      </ol>
+    </div>
+  )
+}
 
 export default function About(){
     return(
@@ -166,71 +267,89 @@ export default function About(){
                 </div>
             </Container>
 
+            {/* Currently section */}
+            <Container className="mt-24 sm:mt-32">
+                <div className="mx-auto max-w-3xl">
+                    <div className="flex items-center gap-3">
+                        <h2 className="text-2xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-3xl">
+                            Currently
+                        </h2>
+                        <span className="flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-medium text-emerald-600 dark:text-emerald-400">
+                            <span className="live-dot" />
+                            Now
+                        </span>
+                    </div>
+                    <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">What I&apos;m up to right now.</p>
+                    <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                        {currently.map((item) => (
+                            <motion.div
+                                key={item.label}
+                                initial={{ opacity: 0, y: 16 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true, margin: '-40px' }}
+                                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                                className="flex items-start gap-3 rounded-xl border border-zinc-100 bg-zinc-50/50 p-4 dark:border-zinc-700/40 dark:bg-zinc-800/30"
+                            >
+                                <span className="text-xl">{item.icon}</span>
+                                <div>
+                                    <p className="text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
+                                        {item.label}
+                                    </p>
+                                    <p className="mt-0.5 text-sm text-zinc-700 dark:text-zinc-300">
+                                        {item.value}
+                                    </p>
+                                </div>
+                            </motion.div>
+                        ))}
+                    </div>
+                </div>
+            </Container>
+
             {/* Timeline section */}
             <Container className="mt-24 sm:mt-32">
                 <div className="mx-auto max-w-3xl">
                     <h2 className="text-2xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-3xl">
                         My Journey
                     </h2>
-                    <div className="mt-10 relative">
-                        <div className="absolute left-[19px] top-2 bottom-2 w-px bg-zinc-200 dark:bg-zinc-700" />
-                        <ol className="space-y-10">
-                            {milestones.map((milestone, index) => (
-                                <li key={index} className="relative pl-14">
-                                    <div className={clsx(
-                                        'absolute left-0 top-0.5 flex h-10 w-10 items-center justify-center rounded-full text-lg ring-4 ring-white dark:ring-zinc-900',
-                                        milestone.current
-                                            ? 'bg-teal-500/10 ring-teal-500/20'
-                                            : 'bg-zinc-100 dark:bg-zinc-800'
-                                    )}>
-                                        <span>{milestone.icon}</span>
-                                    </div>
-                                    <div>
-                                        <span className={clsx(
-                                            'inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold',
-                                            milestone.current
-                                                ? 'bg-teal-500/10 text-teal-600 dark:text-teal-400'
-                                                : 'bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400'
-                                        )}>
-                                            {milestone.year}
-                                            {milestone.current && ' \u2014 Present'}
-                                        </span>
-                                        <h3 className="mt-2 text-base font-semibold text-zinc-900 dark:text-zinc-100">
-                                            {milestone.title}
-                                        </h3>
-                                        <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-                                            {milestone.description}
-                                        </p>
-                                    </div>
-                                </li>
-                            ))}
-                        </ol>
-                    </div>
+                    <AnimatedTimeline />
                 </div>
             </Container>
 
-            {/* Fun facts section */}
+            {/* Fun facts bento grid */}
             <Container className="mt-24 sm:mt-32 mb-16">
                 <div className="mx-auto max-w-3xl">
                     <h2 className="text-2xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-3xl">
                         Beyond the Code
                     </h2>
-                    <p className="mt-4 text-base text-zinc-600 dark:text-zinc-400">
+                    <p className="mt-2 text-base text-zinc-600 dark:text-zinc-400">
                         A few things that make me, me.
                     </p>
-                    <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                        {funFacts.map((fact, index) => (
-                            <div
+                    <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-3">
+                        {bentoFacts.map((fact, index) => (
+                            <motion.div
                                 key={index}
-                                className="group flex items-start gap-4 rounded-xl border border-zinc-100 p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-teal-300 hover:shadow-md hover:shadow-teal-500/5 dark:border-zinc-700/40 dark:hover:border-teal-600 dark:hover:shadow-teal-400/5"
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true, margin: '-40px' }}
+                                transition={{ duration: 0.45, delay: index * 0.06, ease: [0.22, 1, 0.36, 1] }}
+                                className={clsx(
+                                    'group relative overflow-hidden rounded-2xl border border-zinc-100 bg-white p-5 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg dark:border-zinc-700/40 dark:bg-zinc-800/40',
+                                    fact.span
+                                )}
                             >
-                                <span className="mt-0.5 text-2xl transition-transform duration-200 group-hover:scale-110">
-                                    {fact.icon}
-                                </span>
-                                <span className="text-sm text-zinc-600 dark:text-zinc-400">
+                                {/* Background gradient accent */}
+                                <div className={clsx(
+                                    'pointer-events-none absolute inset-0 bg-gradient-to-br opacity-0 transition-opacity duration-300 group-hover:opacity-100',
+                                    fact.accent
+                                )} />
+                                <span className="relative z-10 text-3xl">{fact.icon}</span>
+                                <h3 className="relative z-10 mt-3 text-sm font-semibold text-zinc-800 dark:text-zinc-100">
+                                    {fact.title}
+                                </h3>
+                                <p className="relative z-10 mt-1 text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
                                     {fact.text}
-                                </span>
-                            </div>
+                                </p>
+                            </motion.div>
                         ))}
                     </div>
                 </div>

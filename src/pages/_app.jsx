@@ -22,6 +22,29 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
+function ScrollProgress() {
+  const [pct, setPct] = useState(0);
+  useEffect(() => {
+    const onScroll = () => {
+      const el = document.documentElement;
+      const scrolled = el.scrollTop;
+      const total = el.scrollHeight - el.clientHeight;
+      setPct(total > 0 ? (scrolled / total) * 100 : 0);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+  return (
+    <div
+      className="pointer-events-none fixed bottom-0 left-0 z-[9999] h-[3px] transition-all duration-100"
+      style={{
+        width: `${pct}%`,
+        background: "linear-gradient(90deg, #6EE7B7, #818CF8)",
+      }}
+    />
+  );
+}
+
 function CursorSpotlight() {
   const [pos, setPos] = useState({ x: 0, y: 0 });
   const [visible, setVisible] = useState(false);
@@ -45,7 +68,7 @@ function CursorSpotlight() {
       className="pointer-events-none fixed inset-0 z-30 hidden transition-opacity duration-300 md:block"
       style={{
         opacity: visible ? 1 : 0,
-        background: `radial-gradient(500px circle at ${pos.x}px ${pos.y}px, rgba(20,184,166,0.07), transparent 40%)`,
+        background: `radial-gradient(500px circle at ${pos.x}px ${pos.y}px, rgba(110,231,183,0.06), transparent 40%)`,
       }}
     />
   );
@@ -121,6 +144,7 @@ export default function App({ Component, pageProps, router }) {
 
   return (
     <div className={`${geist.variable} ${jetbrainsMono.variable}`}>
+      <ScrollProgress />
       <CursorSpotlight />
       <PageLoader />
       <div className="fixed inset-0 flex justify-center sm:px-8">
