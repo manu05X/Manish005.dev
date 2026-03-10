@@ -150,7 +150,10 @@ const impactStats = [
 
 export function DetailedResume() {
   const handleDownloadCV = () => {
-    window.open('/api/resume-pdf', '_blank')
+    const a = document.createElement('a')
+    a.href = '/resources/ManishCV.pdf'
+    a.download = 'Manish-Kumar-Resume.pdf'
+    a.click()
   }
 
   return (

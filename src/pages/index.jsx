@@ -39,7 +39,10 @@ import logoJU from '@/images/logos/Ju_logo.png'
 
 function Resume() {
     const handleDownloadCV = () => {
-      window.open('/api/resume-pdf', '_blank')
+      const a = document.createElement('a')
+      a.href = '/resources/ManishCV.pdf'
+      a.download = 'Manish-Kumar-Resume.pdf'
+      a.click()
     };
   
     let resume = [
