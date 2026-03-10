@@ -164,6 +164,85 @@ function Resume() {
     )
   }
 
+// ── Typewriter that cycles through roles ────────────────────────────────────
+const ROLES = [
+  'SDE II at Nike',
+  'System Design Enthusiast',
+  'Full-Stack Engineer',
+  'Open Source Contributor',
+  'Backend Architecture Fan',
+]
+
+function TypewriterText({ texts, className }) {
+  const [index, setIndex] = useState(0)
+  const [display, setDisplay] = useState('')
+  const [phase, setPhase] = useState('typing') // typing | waiting | deleting
+
+  useEffect(() => {
+    const current = texts[index]
+    let id
+    if (phase === 'typing') {
+      if (display.length < current.length) {
+        id = setTimeout(() => setDisplay(current.slice(0, display.length + 1)), 65)
+      } else {
+        id = setTimeout(() => setPhase('waiting'), 2200)
+      }
+    } else if (phase === 'waiting') {
+      id = setTimeout(() => setPhase('deleting'), 120)
+    } else {
+      if (display.length > 0) {
+        id = setTimeout(() => setDisplay(display.slice(0, -1)), 38)
+      } else {
+        setIndex((i) => (i + 1) % texts.length)
+        setPhase('typing')
+      }
+    }
+    return () => clearTimeout(id)
+  }, [display, phase, index, texts])
+
+  return (
+    <span className={className}>
+      {display}
+      <span className="cursor-blink ml-0.5 inline-block w-[2px] h-[1.1em] align-middle bg-teal-400 rounded-sm" />
+    </span>
+  )
+}
+
+// ── Split-text letter-by-letter reveal ─────────────────────────────────────
+function SplitTextHeading({ text, className }) {
+  const container = {
+    hidden: {},
+    visible: { transition: { staggerChildren: 0.038, delayChildren: 0.05 } },
+  }
+  const letter = {
+    hidden: { opacity: 0, y: 18 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] },
+    },
+  }
+  return (
+    <motion.h1
+      className={className}
+      style={{}}
+      variants={container}
+      initial="hidden"
+      animate="visible"
+    >
+      {text.split('').map((ch, i) => (
+        <motion.span
+          key={i}
+          variants={letter}
+          style={{ display: ch === ' ' ? 'inline' : 'inline-block' }}
+        >
+          {ch === ' ' ? '\u00A0' : ch}
+        </motion.span>
+      ))}
+    </motion.h1>
+  )
+}
+
 const sectionVariants = {
   hidden: { opacity: 0, y: 40 },
   visible: {
@@ -292,63 +371,124 @@ export default function Home({ articles }) {
           content="I'm Manish, a Software Developer Engineer II at Nike. I build resilient, high-scale web platforms and love turning complex problems into elegant solutions."
         />
       </Head>
+      {/* ── Grain overlay ───────────────────────────────────────── */}
+      <div className="grain-overlay" aria-hidden="true" />
+
       <div className="relative">
-        <div className="hero-mesh" />
-        <Container className="relative z-10 mt-9">
-          <div className="grid grid-cols-1 items-center lg:grid-cols-2 lg:gap-x-8">
-            <motion.div
-              className="max-w-2xl"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <h1 className="text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl">
-                Hey, I&apos;m Manish.
-              </h1>
-              <p className="mt-3 text-xl font-semibold sm:text-2xl">
-                <span className="shimmer-text">SDE II at Nike</span>
+        <div className="hero-mesh" aria-hidden="true" />
+
+        <Container className="relative z-10 mt-9 pb-4">
+          <div className="grid grid-cols-1 items-center gap-y-10 lg:grid-cols-5 lg:gap-x-4">
+
+            {/* ── Left column ─────────────────────────────────────── */}
+            <div className="lg:col-span-3">
+
+              {/* "Currently at Nike" live badge */}
+              <motion.div
+                className="mb-5 inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white/60 px-3 py-1.5 shadow-sm backdrop-blur-sm dark:border-zinc-700/50 dark:bg-zinc-800/60"
+                initial={{ opacity: 0, y: -12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <span className="live-dot" aria-hidden="true" />
+                <span className="text-xs font-medium text-zinc-600 dark:text-zinc-300">
+                  Currently building at{' '}
+                  <span className="font-semibold text-zinc-900 dark:text-zinc-100">Nike</span>
+                  , Bangalore
+                </span>
+              </motion.div>
+
+              {/* Split-text heading */}
+              <SplitTextHeading
+                text="Hey, I'm Manish."
+                className="font-display text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl lg:text-6xl"
+              />
+
+              {/* Typewriter role */}
+              <p className="mt-4 h-10 text-2xl font-bold sm:text-3xl">
+                <TypewriterText texts={ROLES} className="shimmer-text" />
               </p>
-              <p className="mt-6 max-w-xl text-base leading-7 text-zinc-600 dark:text-zinc-400">
-                I build resilient, high-scale web platforms and love turning
-                complex problems into elegant solutions. Passionate about system
-                design, open source, and crafting delightful user experiences.
-              </p>
-              <div className="mt-8 flex gap-6">
-                <SocialLink
-                  href="https://twitter.com/"
-                  aria-label="Follow on Twitter"
-                  icon={TwitterIcon}
-                />
-                <SocialLink
-                  href="https://github.com/manu05X"
-                  aria-label="Follow on GitHub"
-                  icon={GitHubIcon}
-                />
-                <SocialLink
-                  href="https://www.linkedin.com/in/manishkumar005/"
-                  aria-label="Follow on LinkedIn"
-                  icon={LinkedInIcon}
-                />
-                <SocialLink
-                  href="https://www.instagram.com/_manu__005/"
-                  aria-label="Follow on Instagram"
-                  icon={InstagramIcon}
-                />
-                <SocialLink
-                  href="https://medium.com/@k.manu00005"
-                  aria-label="Follow on Medium"
-                  icon={MediumIcon}
-                />
-              </div>
-            </motion.div>
+
+              {/* Extended bio */}
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.55, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <p className="mt-5 max-w-xl text-base leading-7 text-zinc-600 dark:text-zinc-400">
+                  I&apos;m a Software Engineer with{' '}
+                  <span className="font-medium text-zinc-800 dark:text-zinc-200">5+ years</span>{' '}
+                  of experience building high-scale backend systems and full-stack
+                  products. At{' '}
+                  <span className="font-medium text-zinc-800 dark:text-zinc-200">Nike</span>, I architect
+                  microservices and distributed platforms that power e-commerce
+                  experiences for millions of users worldwide. Before that, at{' '}
+                  <span className="font-medium text-zinc-800 dark:text-zinc-200">Samsung</span>, I led
+                  backend engineering for Galaxy Store and Smart TV ecosystems — driving
+                  performance, reliability, and scale across 190+ countries.
+                </p>
+                {/* <p className="mt-3 max-w-xl text-base leading-7 text-zinc-600 dark:text-zinc-400">
+                  I&apos;m passionate about{' '}
+                  <span className="font-medium text-zinc-800 dark:text-zinc-200">system design</span>,
+                  clean architecture, and the craft of writing software that lasts.
+                  Outside work: open source contributions, technical writing on Medium,
+                  travel photography, and a steady diet of chai.
+                </p> */}
+                <p className="mt-3 max-w-xl text-base leading-7 text-zinc-600 dark:text-zinc-400">
+                  I&apos;m a <span className="font-medium text-zinc-800 dark:text-zinc-200">curious AI learner</span> and 
+                  dedicated problem solver who views software architecture as digital craftsmanship. 
+                  Outside of architecting high-scale systems, I find inspiration in <span className="font-medium text-zinc-800 dark:text-zinc-200">art and drawing</span>, 
+                  using the same principles of composition to visualize elegant technical solutions. 
+                  When I&apos;m not sketching or exploring new AI models, you&apos;ll find me contributing to open source, 
+                  technical writing on Medium, or capturing the world through travel photography.
+                </p>
+
+                {/* Tech pills */}
+                <div className="mt-5 flex flex-wrap gap-2">
+                  {['Java', 'Spring Boot', 'React', 'Next.js', 'AWS', 'Kubernetes', 'System Design', 'Microservices'].map((tag) => (
+                    <span key={tag} className="tech-pill">{tag}</span>
+                  ))}
+                </div>
+
+                {/* Stats row */}
+                <div className="mt-7 flex items-center gap-6">
+                  {[
+                    { value: '5+',   label: 'Years Exp.' },
+                    { value: '2',    label: 'FAANG / MNC' },
+                    { value: '7+',   label: 'Projects' },
+                    { value: '190+', label: 'Countries' },
+                  ].map(({ value, label }, i, arr) => (
+                    <React.Fragment key={label}>
+                      <div className="text-center">
+                        <div className="font-display text-3xl font-extrabold text-zinc-900 dark:text-white">{value}</div>
+                        <div className="mt-0.5 text-xs font-medium tracking-wide text-zinc-500 dark:text-zinc-400">{label}</div>
+                      </div>
+                      {i < arr.length - 1 && <div className="stat-divider h-10" />}
+                    </React.Fragment>
+                  ))}
+                </div>
+
+                {/* Social links */}
+                <div className="mt-8 flex gap-6">
+                  <SocialLink href="https://twitter.com/" aria-label="Follow on Twitter" icon={TwitterIcon} />
+                  <SocialLink href="https://github.com/manu05X" aria-label="Follow on GitHub" icon={GitHubIcon} />
+                  <SocialLink href="https://www.linkedin.com/in/manishkumar005/" aria-label="Follow on LinkedIn" icon={LinkedInIcon} />
+                  <SocialLink href="https://www.instagram.com/_manu__005/" aria-label="Follow on Instagram" icon={InstagramIcon} />
+                  <SocialLink href="https://medium.com/@k.manu00005" aria-label="Follow on Medium" icon={MediumIcon} />
+                </div>
+              </motion.div>
+            </div>
+
+            {/* ── Globe column ─────────────────────────────────────── */}
             <motion.div
-              className="hidden items-center justify-center lg:flex"
-              initial={{ opacity: 0, scale: 0.8 }}
+              className="globe-wrapper hidden lg:flex lg:col-span-2 overflow-visible"
+              initial={{ opacity: 0, scale: 0.82 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 1, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
             >
               <Globe isDark={isDark} size={420} />
             </motion.div>
+
           </div>
         </Container>
       </div>

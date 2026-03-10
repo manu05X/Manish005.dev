@@ -304,6 +304,11 @@ module.exports = {
       },
     }),
     extend: {
+      fontFamily: {
+        sans: ['var(--font-geist)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        display: ['var(--font-geist)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        mono: ['var(--font-mono)', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+      },
       animation: {
         shine: 'shine 2s linear infinite',
         shimmer: 'shimmer 3s ease-in-out infinite',

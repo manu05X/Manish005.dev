@@ -13,6 +13,19 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Apply premium fonts globally */
+body {
+  font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+}
+
+code, pre, kbd, samp {
+  font-family: var(--font-mono), ui-monospace, SFMono-Regular, monospace;
+}
+
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
@@ -38,19 +51,31 @@ body {
 }
 
 .shimmer-text {
+  /* fallback solid colour so text is always readable */
+  color: #0d9488;
   background: linear-gradient(
     90deg,
-    #14b8a6,
+    #0ea5e9,
     #6366f1,
+    #8b5cf6,
     #ec4899,
-    #f59e0b,
-    #14b8a6
+    #0ea5e9
   );
   background-size: 300% 100%;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: shimmer 3s ease-in-out infinite;
+  animation: shimmer 3.5s ease-in-out infinite;
+}
+
+/* Ensure shimmer is visible even if background-clip is unsupported */
+@supports not (-webkit-background-clip: text) {
+  .shimmer-text {
+    -webkit-text-fill-color: initial;
+    color: #0d9488;
+    background: none;
+    animation: none;
+  }
 }
 
 @keyframes shimmer {
@@ -155,4 +180,87 @@ body {
 @keyframes marquee {
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
+}
+
+/* ── Grain / noise texture overlay ─────────────────── */
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9997;
+  opacity: 0.028;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+
+/* ── Blinking cursor for typewriter ────────────────── */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+.cursor-blink {
+  animation: blink 1s step-start infinite;
+}
+
+/* ── Hero stat divider ──────────────────────────────── */
+.stat-divider {
+  width: 1px;
+  align-self: stretch;
+  background: currentColor;
+  opacity: 0.15;
+}
+
+/* ── Tech tag pill ──────────────────────────────────── */
+.tech-pill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 9999px;
+  padding: 0.2rem 0.75rem;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  background: rgba(20, 184, 166, 0.08);
+  color: #0d9488;
+  border: 1px solid rgba(20, 184, 166, 0.2);
+  transition: background 200ms, border-color 200ms;
+}
+
+.tech-pill:hover {
+  background: rgba(20, 184, 166, 0.14);
+  border-color: rgba(20, 184, 166, 0.35);
+}
+
+:is(.dark) .tech-pill {
+  background: rgba(20, 184, 166, 0.1);
+  color: #2dd4bf;
+  border-color: rgba(20, 184, 166, 0.25);
+}
+
+:is(.dark) .tech-pill:hover {
+  background: rgba(20, 184, 166, 0.18);
+  border-color: rgba(20, 184, 166, 0.4);
+}
+
+/* ── Globe wrapper — full globe, centered, no clip ──── */
+.globe-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── "Currently at Nike" badge ──────────────────────── */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(0.85); }
+}
+
+.live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #22c55e;
+  animation: pulse-dot 2s ease-in-out infinite;
+  flex-shrink: 0;
 }
